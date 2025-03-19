@@ -1,22 +1,19 @@
 .service-c{
-  display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .service-container {
   background-color: var(--color-bg);
 }
 
 .service-text-container{
-  flex: 1;
+  border: solid;
+  border-color: red;
   padding: 2rem;
-  float: left;
-  width: 40%;
+  width: fit-content;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  margin-left: 3.2pc;
-  margin-right: 3.2pc;
 }
 
 h2 {
@@ -27,7 +24,6 @@ h2 {
 }
 .service-title{
   text-align: center;
-  margin-bottom: 2pc;
 }
 span {
   color: #FFD700;

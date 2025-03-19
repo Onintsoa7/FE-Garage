@@ -1,44 +1,41 @@
 <div class="service-c">
   <div class="service-text-container">
     <h2>Passer au garage pour <span>{{serviceTitle}}</span></h2>
-  <form>
-    <div class="form-group">
-      <label for="typeEntretien">Type d'entretien :</label>
-      <select id="typeEntretien">
-        <option>Choisir un type</option>
-        <option>Vidange</option>
-        <option>Pneus</option>
-        <option>Freins</option>
-        <option>Climatisation</option>
-        <option>Autre</option>
-      </select>
-    </div>
-    
-    <div class="form-group">
-      <label for="lastMaintenance">Dernière date d'entretien :</label>
-      <input type="date" id="lastMaintenance">
-    </div>    
-
-    <div class="form-row">
+    <form>
       <div class="form-group">
-        <label for="date">Votre Date *</label>
-        <input type="date" id="date">
+        <label for="typeEntretien">Type d'entretien :</label>
+        <select id="typeEntretien">
+          <option>Choisir un type</option>
+          <option>Vidange</option>
+          <option>Pneus</option>
+          <option>Freins</option>
+          <option>Climatisation</option>
+          <option>Autre</option>
+        </select>
       </div>
 
       <div class="form-group">
-        <label for="heure">Votre Heure *</label>
-        <input type="time" id="heure">
+        <label for="lastMaintenance">Dernière date d'entretien :</label>
+        <input type="date" id="lastMaintenance">
       </div>
-    </div>
 
-    <p class="note">*Peut être modifié selon la disponibilité des
-      mécaniciens</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Votre Date *</label>
+          <input type="date" id="date">
+        </div>
 
-    <button class="submit-btn">Demander un rendez-vous</button>
-  </form>
-</div>
-<div class="image-container">
-  <img *ngIf="serviceImage" [src]="serviceImage" alt="Service Image">
-</div>
+        <div class="form-group">
+          <label for="heure">Votre Heure *</label>
+          <input type="time" id="heure">
+        </div>
+      </div>
+
+      <p class="note">*Peut être modifié selon la disponibilité des
+        mécaniciens</p>
+
+      <button class="submit-btn">Demander un rendez-vous</button>
+    </form>
+  </div>
 
 </div>

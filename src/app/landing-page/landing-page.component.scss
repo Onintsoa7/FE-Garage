@@ -126,16 +126,6 @@
 }
 
 
-  :host ::ng-deep {
-    .image-content img {
-      max-width: 80%;
-      height: 24pc !important;
-      object-fit: cover;
-      border-radius: 8px;
-      transition: transform 0.3s;
-    }
-  }
-
 app-footer {
   width: 100%;
   text-align: center;
@@ -171,5 +161,15 @@ app-footer {
 
   .text-content p {
     font-size: 12pt;
+  }
+}
+
+.image-content {
+  ::ng-deep img {
+    max-width: 80%;
+    height: 24pc !important;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s;
   }
 }
