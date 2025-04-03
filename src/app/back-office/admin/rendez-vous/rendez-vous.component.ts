@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzCalendarModule } from 'ng-zorro-antd/calendar';
 import { CommonModule } from '@angular/common';
@@ -42,12 +42,12 @@ export class RendezVousComponent implements OnInit {
   mecanicienList: User[] = [];
   upcomingDates: any[] = [];
   constructor(private fb: FormBuilder, private serviceService: ServiceService,
-      private authService: AuthService, private message: NzMessageService) {
+      private authService: AuthService, private message: NzMessageService, private cdr: ChangeDetectorRef) {
     this.formRendezVous = this.fb.group({
       mecanicien: [null, Validators.required],
       date: [null, Validators.required],
-      heure: [null, Validators.required],
-      estimationReparation: [null, Validators.required]
+      dateoffice: [null, Validators.required],
+      heure: [null, Validators.required]
     });
   }
 
@@ -83,12 +83,6 @@ export class RendezVousComponent implements OnInit {
         this.message.error('Tous les mécaniciens sont pris à cette heure');
       }
     }
-  }
-
-  formatTime(date: Date): string {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}:${minutes}`;
   }
   loadUpcomingDates(): void {
     this.serviceService.getServicesUpComingTakenDates().subscribe({
@@ -151,6 +145,7 @@ export class RendezVousComponent implements OnInit {
     this.formRendezVous.patchValue({
       mecanicien: rdv.mecanicien || null,
       date: rdv.createdAt ? new Date(rdv.createdAt) : null,
+      dateoffice: rdv.dateSuggestionVisite ? new Date(rdv.dateSuggestionVisite) : null,
       heure: heureSuggestionVisite,
       estimationReparation: rdv.dureeEstimee || null
     });
@@ -158,9 +153,77 @@ export class RendezVousComponent implements OnInit {
 
   submitForm(): void {
     if (this.formRendezVous.valid) {
-      console.log('Affectation du mécanicien :', this.formRendezVous.value);
+
+        // Récupération des données du formulaire
+        const formValues = this.formRendezVous.value;
+
+        // Récupération des pièces avec leurs prix
+        const selectedService = this.filteredRendezVous[this.selectedRDVIndex!];
+        const prixPieces: (number | null)[] = [];
+        const avecPieces: boolean[] = [];
+
+        // Transformation des données en tableaux distincts
+        selectedService.piece.forEach((piece: any, index: number) => {
+          if (this.prixPieces[index] !== undefined && this.prixPieces[index] !== null) {
+              prixPieces.push(this.prixPieces[index]);
+          } else {
+              prixPieces.push(0);
+          }
+          avecPieces.push(selectedService.avecPiece?.[index] || false);
+      });
+
+        // Création de l'objet à envoyer
+        const dataToSubmit = {
+            mecanicien: formValues.mecanicien,
+            dateFixeVisite: formValues.dateoffice,
+            heureFixeVisite: this.formatTime(formValues.heure),
+            dureeEstimee: this.formatTime(formValues.estimationReparation),
+            avecPiece: avecPieces,
+            prixPiece: prixPieces,
+            etat: "assigne"
+        };
+
+        this.serviceService.validateService(selectedService._id!, dataToSubmit).subscribe({
+          next: (response) => {
+            console.log("Service mis à jour avec succès :", response);
+
+            this.filteredRendezVous[this.selectedRDVIndex!] = selectedService;
+            this.message.success('Service mis à jour avec succès !');
+
+            this.selectedRDVIndex = null;
+            this.formRendezVous.reset();
+            this.cdr.detectChanges();
+          },
+          error: (error) => console.error("Erreur lors de la mise à jour du service :", error)
+        });
     }
+}
+
+
+formatTime(time: any): string | null {
+  if (!time) return null;
+
+  if (typeof time === 'string' && time.match(/^\d{2}:\d{2}$/)) {
+      return time;
   }
+
+  if (time instanceof Date) {
+      const hours = time.getHours().toString().padStart(2, '0');
+      const minutes = time.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+  }
+
+  if (typeof time === 'object' && 'hour' in time && 'minute' in time) {
+      const hours = time.hour.toString().padStart(2, '0');
+      const minutes = time.minute.toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+  }
+
+  console.error("Format d'heure non reconnu :", time);
+  return null;
+}
+
+
 
   loadRendezVous(): void {
     this.serviceService.getServices().subscribe({
@@ -239,16 +302,22 @@ export class RendezVousComponent implements OnInit {
     const dateText = displayDate ? displayDate.toLocaleDateString('fr-CA') : 'Pas de date';
     return `${rdv.voiture.immatriculation || 'Immatriculation non renseignée'}`;
   }
+  prixPieces: (number | null)[] = []; // Initialiser un tableau vide pour les prix
+
   updatePrice(event: Event, index: number): void {
-    const input = event.target as HTMLInputElement;
-    const value = Number(input.value);
+      const input = event.target as HTMLInputElement;
+      const value = input.value ? parseFloat(input.value) : null;
 
-    if (!this.formRendezVous.value.prixPiece) {
-      this.formRendezVous.patchValue({ prixPiece: [] });
-    }
+      // S'assurer que le tableau prixPieces a la même taille que le nombre de pièces
+      if (this.prixPieces.length <= index) {
+          this.prixPieces.length = index + 1; // Augmente la taille du tableau si nécessaire
+      }
 
-    this.formRendezVous.value.prixPiece[index] = value;
+      this.prixPieces[index] = value; // Met à jour le prix au bon index
+
+      console.log("Prix mis à jour :", this.prixPieces); // Regarde la console pour vérifier
   }
+
   etatList = [
     { label: 'Devis', color: 'black' },
     { label: 'En attente', color: 'orange' },
