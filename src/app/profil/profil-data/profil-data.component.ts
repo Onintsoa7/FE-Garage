@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ConfirmationComponent } from '../../confirmation/confirmation.component';
+import { ServiceService } from '../../core/services/frontoffice/service.service';
+import { Facture } from '../../core/models/facture';
 
 @Component({
   selector: 'app-profil-data',
@@ -26,17 +28,13 @@ import { ConfirmationComponent } from '../../confirmation/confirmation.component
 export class ProfilDataComponent implements OnInit {
 
   @Output() carFormClicked = new EventEmitter<void>();
-  @Output() activeFactureClicked = new EventEmitter<void>();
+  @Output() activeFactureClicked = new EventEmitter<string>();
 
   storedUser = sessionStorage.getItem('connected_user');
   id: string = this.storedUser ? JSON.parse(this.storedUser)._id : '';
-
+  listeFacture = new MatTableDataSource<any>([]);
   voituresByUser = new MatTableDataSource<any>([]);
-  visits = new MatTableDataSource<any>([
-    { id:'0', car: 'Mazda', date: '02-05-2025', service: 'Réparation' },
-    { id:'1', car: 'Mercedes', date: '02-05-2025', service: 'Entretien' }
-  ]);
-
+ 
   @ViewChild('paginatorVoitures') paginatorVoitures!: MatPaginator;
   @ViewChild('paginatorVisites') paginatorVisites!: MatPaginator;
 
@@ -46,16 +44,18 @@ export class ProfilDataComponent implements OnInit {
   constructor(
     private voitureService: VoitureService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private service : ServiceService
   ) { }
 
   ngOnInit(): void {
     this.getVoituresListe();
+    this.getFacturesListe();
   }
 
   ngAfterViewInit() {
     this.voituresByUser.paginator = this.paginatorVoitures;
-    this.visits.paginator = this.paginatorVisites;
+    this.listeFacture.paginator = this.paginatorVisites;
   }
 
   getVoituresListe(): void {
@@ -65,13 +65,21 @@ export class ProfilDataComponent implements OnInit {
     });
   }
 
+  getFacturesListe(): void { 
+    this.service.getFacturesByClientId(this.id).subscribe((result: Facture | Facture[]) => {
+      const factures = Array.isArray(result) ? result : [result];
+      this.listeFacture.data = factures;
+    })
+  }    
+
   onCarFormClick() {
     this.carFormClicked.emit();
   }
 
-  onFactureClick() {
-    this.activeFactureClicked.emit();
-  }
+  onFactureClick(id: string): void {
+    console.log('ID envoyé par EventEmitter :', id); // Ajouter ce log
+    this.activeFactureClicked.emit(id); // Envoi de l'ID
+}
 
   openDeleteConfirmationDialog(carId: string): void {
     const dialogRef = this.dialog.open(ConfirmationComponent, {

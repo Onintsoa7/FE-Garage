@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Facture } from '../../core/models/facture';
+import { ServiceService } from '../../core/services/frontoffice/service.service';
 
 @Component({
   selector: 'app-profil-facture',
@@ -9,43 +11,44 @@ import html2canvas from 'html2canvas';
   templateUrl: './profil-facture.component.html',
   styleUrl: './profil-facture.component.scss'
 })
-export class ProfilFactureComponent {
+export class ProfilFactureComponent implements OnInit {
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
-
-  factureNumero = 'FF0121';
-  dateFacture = '01/02/2025';
-
-  client = {
-    nom: 'RAZAFINDRATANDRA Miradomahefa Fitahiana',
-    adresse: 'LOT IIIL 104 Bis',
-    contact: '+261345864714'
-  };
-
-  prestations = [
-    {
-      description: 'vidange voiture simple',
-      quantite: 1,
-      prix: 40000,
-      tva: 0.2
-    },
-    {
-      description: 'Changement de disques et de plaquettes frein avants',
-      quantite: 1,
-      prix: 80000,
-      tva: 0.2
+  @Input() factureId: string | undefined;
+  FactureFacture: Facture | null = null;
+  sousTotalHT: number = 0;
+  montantTVA: number = 0;
+  montantTotal: number = 0;
+  
+  constructor(private service : ServiceService) { }
+  ngOnInit(): void {
+    if (this.factureId) {
+      this.loadFactureDetails();
     }
-  ];
-
-  get sousTotalHT(): number {
-    return this.prestations.reduce((total, item) => total + (item.prix * item.quantite), 0);
+    
   }
-
-  get montantTVA(): number {
-    return this.prestations.reduce((total, item) => total + (item.prix * item.quantite * item.tva), 0);
+  loadFactureDetails() {
+    console.log(`Chargement des détails de la facture avec l'ID : ${this.factureId}`);
+    if (this.factureId) {
+      this.service.getFactureById(this.factureId).subscribe(facture => {
+        this.FactureFacture = facture;
+      });
+    }
+    this.calculerMontants();
   }
+  
+  factureNumero = this.FactureFacture?.numeroFacture;
 
-  get montantTotal(): number {
-    return this.sousTotalHT + this.montantTVA;
+  calculerMontants(): void {
+    if (this.FactureFacture?.coutPiece) {
+      // Calcul du sous-total HT
+      this.sousTotalHT = this.FactureFacture.coutPiece.reduce((total: number, prix: number) => total + prix, 0);
+
+      // Calcul de la TVA (20% de sousTotalHT)
+      this.montantTVA = this.sousTotalHT * 0.2;
+
+      // Calcul du montant total TTC (HT + TVA)
+      this.montantTotal = this.sousTotalHT + this.montantTVA;
+    }
   }
 
   downloadPDF(): void {
