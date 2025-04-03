@@ -71,26 +71,26 @@
   <div class="profil-visit">
     <div class="contenu">
       <h3>Vos visites</h3>
-    <table mat-table [dataSource]="visits" class="mat-elevation-z8">
+    <table mat-table [dataSource]="listeFacture" class="mat-elevation-z8">
       <ng-container matColumnDef="car">
         <th mat-header-cell *matHeaderCellDef> Voiture </th>
-        <td mat-cell *matCellDef="let visit"> {{ visit.car }} </td>
+        <td mat-cell *matCellDef="let visit"> {{ visit.voiture }} </td>
       </ng-container>
 
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef> Date </th>
-        <td mat-cell *matCellDef="let visit"> {{ visit.date }} </td>
+        <td mat-cell *matCellDef="let visit"> {{ visit.service.dateFixeVisite | date: 'dd/MM/yyyy' }} </td>
       </ng-container>
 
       <ng-container matColumnDef="service">
         <th mat-header-cell *matHeaderCellDef> Service </th>
-        <td mat-cell *matCellDef="let visit"> {{ visit.service }} </td>
+        <td mat-cell *matCellDef="let visit"> {{ visit.typeService.nom }} </td>
       </ng-container>
 
       <ng-container matColumnDef="details">
         <th mat-header-cell *matHeaderCellDef> Détails </th>
         <td mat-cell *matCellDef="let visit">
-          <a (click)="onFactureClick()">Voir détails</a>
+          <a (click)="onFactureClick(visit._id)">Voir facture</a>
         </td>
       </ng-container>
 

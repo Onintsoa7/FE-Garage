@@ -10,4 +10,5 @@ export class Constants{
   public static SERVICE_API = this.BASE_URL + 'services';
   public static TYPE_SERVICE_API = this.BASE_URL + 'type-services';
   public static VOITURE_API = this.BASE_URL + 'voitures';
+  public static FACTURE_API = this.BASE_URL + 'factures';
 }

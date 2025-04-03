@@ -16,21 +16,21 @@
         <div class="destinataire-section">
           <div class="info">
             <div class="client-info">
-              <p><strong>Nom : </strong>{{ client.nom }}</p>
-              <p><strong>Adresse : </strong>{{ client.adresse }}</p>
-              <p><strong>Contact : </strong>{{ client.contact }}</p>
+              <p><strong>Nom : </strong>{{ FactureFacture?.client.nom }}</p>
+              <p><strong>Adresse mail : </strong>{{ FactureFacture?.client.adresseMail }}</p>
+              <p><strong>Contact : </strong>{{ FactureFacture?.client.numeroTel }}</p>
             </div>
           </div>
           <div class="facture-info">
-            <strong>Numéro Facture</strong> {{ factureNumero }}<br />
-            <strong>Date Facture</strong><br />{{ dateFacture }}
+            <strong>Numéro Facture</strong> {{ FactureFacture?.numeroFacture }}<br />
+            <strong>Date Facture</strong><br />{{ FactureFacture?.date | date:'dd/MM/yyyy' }}
           </div>
         </div>
       
         <table class="invoice-table">
           <thead>
             <tr>
-              <th>Description</th>
+              <th>Description : Voiture: {{ FactureFacture?.voiture }}</th>
               <th>Quantité</th>
               <th>Prix</th>
               <th>TVA</th>
@@ -38,34 +38,45 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let item of prestations">
-              <td>{{ item.description }}</td>
-              <td class="number">{{ item.quantite }}</td>
-              <td class="number">{{ item.prix | number:'1.0-0' }} Ar</td>
-              <td class="number">{{ item.tva * 100 }}%</td>
-              <td class="number">{{ (item.prix * item.quantite) | number:'1.0-0' }} AR</td>
+            <tr>
+              <td>Cout {{FactureFacture?.typeService.nom}} (en h)</td>
+              <td style="text-align: end;">{{FactureFacture?.typeService.duree}}</td>
+              <td style="text-align: end;">
+                {{ ((FactureFacture?.typeService?.duree ?? 0) * (FactureFacture?.prixHeure ?? 0) | number:'1.0-0') }} AR
+              </td>
+              
+              <td style="text-align: end;">20%</td>
+              <td style="text-align: end;">{{(FactureFacture?.typeService?.duree ?? 0) * (FactureFacture?.prixHeure ?? 0) * 1.2 | number:'1.0-0'}}AR</td>
+            </tr>
+            <tr *ngFor="let item of FactureFacture?.piece; let i = index">
+              <td>{{ item }}</td> 
+              <td class="number">1</td> 
+              <td class="number">{{ FactureFacture?.coutPiece[i]| number:'1.0-0' }} Ar</td> 
+              <td class="number">20%</td> 
+              <td class="number">{{ (FactureFacture?.coutPiece[i] * 1.2) | number:'1.0-0' }} Ar</td> 
             </tr>
           </tbody>
+          
         </table>
-      
         <table class="total-table">
           <tr>
             <td>Sous-total HT</td>
-            <td class="number">{{ sousTotalHT | number:'1.0-0' }} ar</td>
+            <td class="number">{{ FactureFacture?.coutReparation | number:'1.0-0' }} ar</td>
           </tr>
           <tr>
             <td>TVA 20%</td>
-            <td class="number">{{ montantTVA | number:'1.0-0' }} ar</td>
+            <td class="number">{{ (FactureFacture?.coutReparation * 0.2) | number:'1.0-0' }} ar</td>
           </tr>
           <tr>
             <td><strong>Montant Total AR</strong></td>
-            <td class="number"><strong>{{ montantTotal | number:'1.0-0' }} ar</strong></td>
+            <td class="number"><strong>{{ (FactureFacture?.coutReparation * 1.2) | number:'1.0-0' }} ar</strong></td>
           </tr>
           <tr>
             <td><strong>Montant Payer</strong></td>
-            <td class="number"><strong>{{ montantTotal | number:'1.0-0' }} ar</strong></td>
+            <td class="number"><strong>{{ FactureFacture?.montantPayer | number:'1.0-0' }} ar</strong></td>
           </tr>
         </table>
+        
       </div>
     </div>
     <div class="container-btn">       

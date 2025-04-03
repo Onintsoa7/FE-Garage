@@ -2,14 +2,21 @@
   <app-header-pages></app-header-pages>
   <div class="container-p">
     <app-profil-container (editClicked)="onEditProfile()"></app-profil-container>
-    <app-profil-data  (activeFactureClicked)="onFacture()" (carFormClicked)="onCarForm()" *ngIf="isEditing === false && IscarForm === false && IsFactureOpen === false"></app-profil-data>
+    <app-profil-data  
+      (activeFactureClicked)="onFacture($event)" 
+      (carFormClicked)="onCarForm()" 
+      *ngIf="isEditing === false && IscarForm === false && IsFactureOpen === false">
+    </app-profil-data>
     <div class="profil-edit">
       <app-profil-edit *ngIf="isEditing === true" (cancelEdit)="onCancelEdit()"></app-profil-edit>
     </div>
     <div class="profil-car" *ngIf="IscarForm === true">
       <app-profil-car (cancelEdit)="onCancelCarForm()"></app-profil-car>
     </div>
-    <app-profil-facture *ngIf="IsFactureOpen === true" ></app-profil-facture>
+    <app-profil-facture 
+    *ngIf="IsFactureOpen === true"
+    [factureId]="selectedFactureId ?? undefined">
+  </app-profil-facture>
     <app-notes></app-notes>
   </div>
   <app-footer></app-footer>

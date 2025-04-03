@@ -18,7 +18,7 @@ export class ProfilComponent {
   isEditing = false;
   IscarForm = false;
   IsFactureOpen = false;
-  
+  selectedFactureId: string | null = null; 
   onEditProfile() {
     this.IscarForm = false;
     this.isEditing = true;
@@ -31,9 +31,10 @@ export class ProfilComponent {
     this.IsFactureOpen = false;
   }
 
-  onFacture() {
-    console.log("facture");
+  onFacture(id: string) {
+    console.log("Facture sélectionnée avec ID :", id);
     this.IsFactureOpen = true;
+    this.selectedFactureId = id;
     this.isEditing = false;
     this.IscarForm = false;
   }
