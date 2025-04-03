@@ -169,4 +169,10 @@ export class ServiceService {
     return this.http.get<any[]>(`${Constants.SERVICE_API}/upcoming`);
   }
 
+  validateService(id: string, data: any): Observable<Service> {
+    const token = sessionStorage.getItem('bo_auth_token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<Service>(`${Constants.SERVICE_API}/${id}`, data, { headers });
+  }
+
 }

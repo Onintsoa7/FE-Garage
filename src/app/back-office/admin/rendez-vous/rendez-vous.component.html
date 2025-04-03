@@ -66,9 +66,7 @@
                         {{ rdv.prixPiece?.[index] }} Ar
                       </ng-container>
                       <ng-template #inputPrice>
-                        <input type="number" class="border border-gray-300 rounded p-1 w-full"
-                               placeholder="Entrer le prix"
-                               (change)="updatePrice($event, index)" />
+                        <p>À proposer</p>
                       </ng-template>
                     </td>
 
@@ -93,7 +91,7 @@
                 <hr>
             </div>
 
-            <form [formGroup]="formRendezVous" (ngSubmit)="submitForm()" nz-form nzLayout="vertical">
+            <form [formGroup]="formRendezVous" nz-form nzLayout="vertical">
                 <nz-form-item>
                     <nz-form-label>Mécanicien</nz-form-label>
                     <nz-form-control>
@@ -102,12 +100,35 @@
                         </nz-select>
                     </nz-form-control>
                 </nz-form-item>
-
+                <table class="table-piece">
+                  <thead class="thead-piece">
+                    <tr>
+                      <th class="border px-4 py-2">Nom de la Pièce</th>
+                      <th class="border px-4 py-2">Prix</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let piece of filteredRendezVous[selectedRDVIndex]?.piece; let index = index">
+                      <td class="border px-4 py-2">{{ piece.fille || 'Non spécifiée' }}</td>
+                      <td class="border px-4 py-2">
+                        <ng-container *ngIf="((filteredRendezVous[selectedRDVIndex]?.prixPiece?.[index] !== undefined && filteredRendezVous[selectedRDVIndex]?.prixPiece?.[index] !== 0) || filteredRendezVous[selectedRDVIndex]?.avecPiece?.[index] === true); else inputPrice">
+                          {{ filteredRendezVous[selectedRDVIndex]?.prixPiece?.[index] }} Ar
+                        </ng-container>
+                        <ng-template #inputPrice>
+                          <input type="number" class="border border-gray-300 rounded p-1 w-full"
+                                 placeholder="Entrer le prix"
+                                 (change)="updatePrice($event, index)" />
+                        </ng-template>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br><br>
                 <div class="row">
                   <nz-form-item>
                       <nz-form-label>Date</nz-form-label>
                       <nz-form-control>
-                          <nz-date-picker formControlName="date" nzFormat="yyyy-MM-dd"></nz-date-picker>
+                          <nz-date-picker formControlName="dateoffice" nzFormat="yyyy-MM-dd"></nz-date-picker>
                       </nz-form-control>
                   </nz-form-item>
 
@@ -117,15 +138,8 @@
                           <nz-time-picker formControlName="heure" nzFormat="HH:mm"></nz-time-picker>
                       </nz-form-control>
                   </nz-form-item>
-
-                  <nz-form-item>
-                      <nz-form-label>Estimation Réparation</nz-form-label>
-                      <nz-form-control>
-                          <nz-time-picker formControlName="estimationReparation" nzFormat="HH:mm"></nz-time-picker>
-                      </nz-form-control>
-                  </nz-form-item>
               </div>
-            <button nz-button nzType="primary" [disabled]="formRendezVous.invalid">Valider</button>
+            <button nz-button nzType="primary" [disabled]="formRendezVous.invalid" (click)="submitForm()">Valider</button>
             </form>
         </div>
 
