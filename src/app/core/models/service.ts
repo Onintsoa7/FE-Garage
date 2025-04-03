@@ -29,4 +29,5 @@ export interface Service {
   updatedAt?: Date;
   mecanicien?: string | User;
   dureeEstimee?:string;
+  dureeEstimeeEnNombre?:number;
 }

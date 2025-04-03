@@ -6,6 +6,7 @@ import { Piece } from '../../models/piece';
 import { TypeService } from '../../models/type-service';
 import { Service } from '../../models/service';
 import { Voiture } from '../../models/voiture';
+import { Facture } from '../../models/facture';
 
 @Injectable({
   providedIn: 'root'
@@ -143,5 +144,24 @@ export class ServiceService {
     return this.http.get<Service[]>(url);
   }
 
-
+    //FACTURE
+    getFactures(): Observable<Facture[]> {
+      return this.http.get<Facture[]>(Constants.FACTURE_API);
+    }
+  
+    getFactureById(id: string): Observable<Facture> {
+      return this.http.get<Facture>(`${Constants.FACTURE_API}/${id}`);
+    }
+  
+    addFacture(data: any): Observable<Facture> {
+      return this.http.post<Facture>(Constants.FACTURE_API, data);
+    }
+  
+    updateFacture(id: string, data: any): Observable<Facture> {
+      return this.http.put<Facture>(`${Constants.FACTURE_API}/${id}`, data);
+    }
+  
+    deleteFacture(id: string): Observable<any> {
+      return this.http.delete(`${Constants.FACTURE_API}/${id}`);
+    }
 }

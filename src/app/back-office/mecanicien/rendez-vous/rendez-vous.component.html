@@ -2,69 +2,130 @@
   <nz-spin [nzSpinning]="isLoading">
     <div class="container-rendez-vous">
       <div class="titre">
-        <h1>Vos Rendez-vous</h1>
+        <h1><strong>Vos Rendez-vous</strong> du  {{datenow}}</h1>
       </div>
-
-      <div class="columns">
-        <!-- Colonne Tâches -->
-        <div class="example-container">
-          <h2>Tâches</h2>
-          <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="todo"
-            [cdkDropListConnectedTo]="[inProgressList, doneList]" id="todoList" class="example-list"
-            (cdkDropListDropped)="drop($event)">
-            <div *ngFor="let item of todo" class="example-box" cdkDrag>
-              <p><strong>Date:</strong> {{ item.dateFixeVisite | date:'dd/MM/yyyy' }} à {{ item.heureFixeVisite }}</p>
-              <p><strong>Voiture:</strong> {{ item.voiture?.marque }} {{ item.voiture?.modele }}</p>
-              <p><strong>Service:</strong> {{ item.typeService?.nom }}</p>
-              <p><strong>Pièces utilisées :</strong></p>
-              <ul style="line-height: 20px;">
-                <li *ngFor="let piece of item.piece">{{ piece?.mere || 'Mère inconnue' }} - {{ piece?.fille || 'Fille
-                  inconnue' }}</li>
-              </ul>
-              <p><strong>Client:</strong> {{ item.user.nom }} ({{item.user.numeroTel}})</p>
+      <div class="row">
+        <div class="columns">
+          <!-- Colonne Tâches -->
+          <div class="example-container">
+            <h2>Tâches</h2>
+            <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="todo"
+              [cdkDropListConnectedTo]="[inProgressList, doneList]" id="todoList" class="example-list"
+              (cdkDropListDropped)="drop($event)">
+              <div *ngFor="let item of todo" class="example-box" cdkDrag>
+                <p><strong>Date:</strong> {{ item.dateFixeVisite | date:'dd/MM/yyyy' }} à {{ item.heureFixeVisite }}</p>
+                <p><strong>Voiture:</strong> {{ item.voiture.marque }} {{ item.voiture.modele }}</p>
+                <p><strong>Service:</strong> {{ item.typeService?.nom }}</p>
+                <p><strong>Pièces utilisées :</strong></p>
+                <ul style="line-height: 20px;">
+                  <li *ngFor="let piece of item.piece">{{ piece?.mere || 'Mère inconnue' }} - {{ piece?.fille || 'Fille
+                    inconnue' }}</li>
+                </ul>
+                <p><strong>Client:</strong> {{ item.user.nom }} ({{item.user.numeroTel}})</p>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Colonne En cours -->
-        <div class="example-container">
-          <h2>En cours</h2>
-          <div cdkDropList #inProgressList="cdkDropList" [cdkDropListData]="inProgress"
-            [cdkDropListConnectedTo]="[todoList, doneList]" id="inProgressList" class="example-list"
-            (cdkDropListDropped)="drop($event)">
-            <div *ngFor="let item of inProgress" class="example-box" cdkDrag>
-              <p><strong>Date:</strong> {{ item.dateFixeVisite | date:'dd/MM/yyyy' }} à {{ item.heureFixeVisite }}</p>
-              <p><strong>Voiture:</strong> {{ item.voiture?.marque }} {{ item.voiture?.modele }}</p>
-              <p><strong>Service:</strong> {{ item.typeService?.nom }}</p>
-              <p><strong>Pièces utilisées :</strong></p>
-              <ul style="line-height: 20px;">
-                <li *ngFor="let piece of item.piece">{{ piece?.mere || 'Mère inconnue' }} - {{ piece?.fille || 'Fille
-                  inconnue' }}</li>
-              </ul>
-              <p><strong>Client:</strong> {{ item.user.nom }} ({{item.user.numeroTel}})</p>
+  
+          <!-- Colonne En cours -->
+          <div class="example-container">
+            <h2>En cours</h2>
+            <div cdkDropList #inProgressList="cdkDropList" [cdkDropListData]="inProgress"
+              [cdkDropListConnectedTo]="[todoList, doneList]" id="inProgressList" class="example-list"
+              (cdkDropListDropped)="drop($event)">
+              <div *ngFor="let item of inProgress" class="example-box" cdkDrag>
+                <p><strong>Date:</strong> {{ item.dateFixeVisite | date:'dd/MM/yyyy' }} à {{ item.heureFixeVisite }}</p>
+                <p><strong>Voiture:</strong> {{ item.voiture.marque }} {{ item.voiture.modele }}</p>
+                <p><strong>Service:</strong> {{ item.typeService?.nom }}</p>
+                <p><strong>Pièces utilisées :</strong></p>
+                <ul style="line-height: 20px;">
+                  <li *ngFor="let piece of item.piece">{{ piece?.mere || 'Mère inconnue' }} - {{ piece?.fille || 'Fille
+                    inconnue' }}</li>
+                </ul>
+                <p><strong>Client:</strong> {{ item.user.nom }} ({{item.user.numeroTel}})</p>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Colonne Terminer -->
-        <div class="example-container">
-          <h2>Terminer</h2>
-          <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="done"
-            [cdkDropListConnectedTo]="[todoList, inProgressList]" id="doneList" class="example-list"
-            (cdkDropListDropped)="drop($event)">
-            <div *ngFor="let item of done" class="example-box" cdkDrag>
-              <p><strong>Date:</strong> {{ item.dateFixeVisite | date:'dd/MM/yyyy' }} à {{ item.heureFixeVisite }}</p>
-              <p><strong>Voiture:</strong> {{ item.voiture?.marque }} {{ item.voiture?.modele }}</p>
-              <p><strong>Service:</strong> {{ item.typeService?.nom }}</p>
-              <p><strong>Pièces utilisées :</strong></p>
-              <ul style="line-height: 20px;">
-                <li *ngFor="let piece of item.piece">{{ piece?.mere || 'Mère inconnue' }} - {{ piece?.fille || 'Fille
-                  inconnue' }}</li>
-              </ul>
-              <p><strong>Client:</strong> {{ item.user.nom }} ({{item.user.numeroTel}})</p>
+  
+          <!-- Colonne Terminer -->
+          <div class="example-container">
+            <h2>Terminés</h2>
+            <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="done"
+              [cdkDropListConnectedTo]="[todoList, inProgressList]" id="doneList" class="example-list"
+              (cdkDropListDropped)="drop($event)">
+              <div *ngFor="let item of done" class="example-box" cdkDrag>
+                <p><strong>Date:</strong> {{ item.dateFixeVisite | date:'dd/MM/yyyy' }} à {{ item.heureFixeVisite }}</p>
+                <p><strong>Voiture:</strong> {{ item.voiture.marque }} {{ item.voiture.modele }}</p>
+                <p><strong>Service:</strong> {{ item.typeService?.nom }}</p>
+                <p><strong>Pièces utilisées :</strong></p>
+                <ul style="line-height: 20px;">
+                  <li *ngFor="let piece of item.piece">{{ piece?.mere || 'Mère inconnue' }} - {{ piece?.fille || 'Fille
+                    inconnue' }}</li>
+                </ul>
+                <p><strong>Client:</strong> {{ item.user.nom }} ({{item.user.numeroTel}})</p>
+              </div>
             </div>
           </div>
+      </div>
+        
+      <div class="facturation">
+        <h2>Facturation</h2>
+        <div class="liste-terminer">
+          <div class="card" *ngFor="let facture of facturations">
+            <p>Client : {{ facture.voiture.marque || 'Marque indisponible' }} - {{ facture.voiture.modele || 'Modèle indisponible' }}</p>
+            <p>Date : {{ facture.dateFixeVisite | date:'dd/MM/yyyy' }} à {{ facture.heureFixeVisite }}</p>
+            <p>Type Service : {{ facture.typeService?.nom || 'Service indisponible' }}</p>
+            <p>Durée estimée : {{ facture.dureeEstimee }}</p>
+            <p>Durée de Service 
+              <input 
+                nz-input 
+                [(ngModel)]="facture.dureeEstimeeEnNombre" 
+                type="number"
+                placeholder="Entrez la durée du service"
+              >
+            </p>
+            
+            <p>Pièces remplacées :
+            <nz-select
+              nzMode="multiple"
+              [(ngModel)]="facture.piece"
+              (ngModelChange)="onPieceChange(facture)"
+              nzPlaceHolder="Sélectionner les pièces"
+              style="width: 100%"
+              [nzDisabled]="true"
+              >
+              <nz-option *ngFor="let piece of pieces" [nzValue]="piece.fille" [nzLabel]="piece.fille || 'Fille inconnue'"></nz-option>
+            </nz-select>
+            </p>
+            <div class="piece">
+              <div *ngFor="let piece of facture.piece; let i = index" style="margin-top: 10px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; align-content: center;">
+                <label>{{ piece }}:</label>
+                <input 
+                  nz-input
+                  type="number"
+                  [ngModel]="facture.prixPiece ? facture.prixPiece[i] : null" 
+                  (ngModelChange)="updatePrixPiece(facture, i)"  
+                  placeholder="Prix de la pièce"
+                  style="width: 150px; margin-bottom: 10px;"
+                  readonly
+                />
+              </div>
+            </div>
+            
+            <!-- Ajouter une nouvelle pièce manuellement -->
+            <div style="margin-top: 20px;">
+              <input nz-input [(ngModel)]="nouvellePiece" placeholder="Nom de la pièce" style="width: 200px;" />
+              <input nz-input [(ngModel)]="nouveauPrix" type="number" placeholder="Prix de la pièce" style="width: 150px; margin-left: 10px;" />
+              <button nz-button nzType="primary" (click)="ajouterPiece(facture)">Ajouter la pièce</button>
+            </div>
+            
+            <button nz-button nzType="primary" (click)="facturer(facture)" style="margin-top: 10px;">
+              Facturer
+            </button>
+          </div>            
         </div>
+      </div>
+      
+      
       </div>
     </div>
   </nz-spin>
