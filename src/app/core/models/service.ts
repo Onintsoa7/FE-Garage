@@ -26,4 +26,5 @@ export interface Service {
   duree?: number;
   createdAt?: Date;
   updatedAt?: Date;
+  prixHeure?: number;
 }
