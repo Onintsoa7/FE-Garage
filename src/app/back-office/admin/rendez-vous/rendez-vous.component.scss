@@ -40,7 +40,6 @@
             flex-direction: column;
             overflow-y: scroll;
             padding: 10px;
-            height: 650px;
 
             .rendez-vous {
                 cursor: pointer;
@@ -80,7 +79,6 @@
 
                         &:nth-child(n+3) {
                             color: #555;
-                            font-style: italic;
                         }
                     }
                 }
@@ -121,4 +119,95 @@
 
         }
     }
+    table-piece {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    thead-piece {
+      background-color: #f0f0f0;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      text-align: left;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    tbody tr {
+      transition: background-color 0.3s;
+    }
+
+    tbody tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+
+    .etat-liste {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      margin-top: 1rem;
+    }
+
+    .etat-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    .etat-item {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #eaeaea;
+      }
+    }
+
+    .etat-couleur {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-right: 10px;
+      border-radius: 50%;
+      border: 1px solid #ddd;
+    }
+
+    .etat-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+
+
 }

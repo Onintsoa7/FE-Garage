@@ -77,7 +77,7 @@ export class ServiceService {
   }
 
   updateService(id: string, data: Partial<Service>): Observable<Service> {
-    const token = sessionStorage.getItem('bo_auth_token'); 
+    const token = sessionStorage.getItem('bo_auth_token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.put<Service>(`${Constants.SERVICE_API}/${id}`, data, { headers });
   }
@@ -148,20 +148,25 @@ export class ServiceService {
     getFactures(): Observable<Facture[]> {
       return this.http.get<Facture[]>(Constants.FACTURE_API);
     }
-  
+
     getFactureById(id: string): Observable<Facture> {
       return this.http.get<Facture>(`${Constants.FACTURE_API}/${id}`);
     }
-  
+
     addFacture(data: any): Observable<Facture> {
       return this.http.post<Facture>(Constants.FACTURE_API, data);
     }
-  
+
     updateFacture(id: string, data: any): Observable<Facture> {
       return this.http.put<Facture>(`${Constants.FACTURE_API}/${id}`, data);
     }
-  
+
     deleteFacture(id: string): Observable<any> {
       return this.http.delete(`${Constants.FACTURE_API}/${id}`);
     }
+  // Récupérer tous les dates visites futures fixées
+  getServicesUpComingTakenDates(): Observable<any> {
+    return this.http.get<any[]>(`${Constants.SERVICE_API}/upcoming`);
+  }
+
 }
