@@ -1,22 +1,19 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { importProvidersFrom } from '@angular/core';
-import { HttpClientModule, HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
-import { fr_FR, provideNzI18n } from 'ng-zorro-antd/i18n';
-import { registerLocaleData } from '@angular/common';
-import fr from '@angular/common/locales/fr';
-import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app/app.component';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { importProvidersFrom } from '@angular/core';
+import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { AuthInterceptor } from './app/core/interceptors/auth.interceptor';
-registerLocaleData(fr);
+import { FormsModule } from '@angular/forms';
+import { fr_FR, provideNzI18n } from 'ng-zorro-antd/i18n';
+import { routes } from './app/app.routes';
+import { provideRouter } from '@angular/router';
 
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+registerLocaleData(localeFr);
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -27,19 +24,12 @@ bootstrapApplication(AppComponent, {
       NgxEchartsModule.forRoot({
         echarts: () => import('echarts')
       }),
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient]
-        }
-      }),
       FormsModule
     ),
+    provideHttpClient(withFetch()),
+    provideRouter(routes),
     provideNzI18n(fr_FR),
-    provideHttpClient(),
-    provideHttpClient(
-      withInterceptors([AuthInterceptor])
-    )
+    importProvidersFrom(FormsModule),
+    provideHttpClient()
   ]
 });

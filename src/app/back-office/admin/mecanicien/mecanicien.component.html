@@ -3,26 +3,26 @@
     <h1>Liste des mécaniciens</h1>
     <hr />
     <button nz-button nzType="primary" (click)="activateMecForm()">Ajouter Mécanicien</button>
-    
+
     <nz-table #basicTable [nzData]="listOfData" [nzBordered]="true" style="margin-top: 12px;">
       <thead>
         <tr>
           <th>Nom</th>
           <th>Âge</th>
           <th>Adresse</th>
+          <th>Contact</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         @for (data of basicTable.data; track data) {
           <tr (click)="onSelectMecanicien(data)">
-            <td>{{ data.name }}</td>
-            <td>{{ data.age }}</td>
-            <td>{{ data.address }}</td>
+            <td>{{ data.nom }}</td>
+            <td>{{ calculateAge(data.dateDeNaissance) }}</td>
+            <td>{{ data.adresse }}</td>
+            <td>{{ data.numeroTel }}</td>
             <td>
               <a>Voir</a>
-              <nz-divider nzType="vertical"></nz-divider>
-              <a>Supprimer</a>
             </td>
           </tr>
         }
@@ -31,9 +31,9 @@
   </div>
 
   <div class="card-right" *ngIf="selectedMecanicien && mecForm === false" >
-    <h1>Heures de travail - {{ selectedMecanicien.name }}</h1>
+    <h1>Heures de travail - {{ selectedMecanicien.nom }}</h1>
     <hr />
-  
+
     <!-- Filtre mois -->
     <nz-date-picker
       nzMode="month"
@@ -43,7 +43,7 @@
       [nzPlaceHolder]="'Filtrer par mois'"
       [nzDisabledDate]="disableFutureMonth"
     ></nz-date-picker>
-  
+
     <!-- Graphique -->
     <div
       echarts
@@ -56,45 +56,50 @@
   <div class="card-right" *ngIf="mecForm === true">
     <h1>Ajouter Mécanicien</h1>
     <hr>
-  
-    <form nz-form [formGroup]="mecanicienForm" (ngSubmit)="onSubmit()" nzLayout="vertical">
-      
+
+    <form nz-form [formGroup]="mecanicienForm" nzLayout="vertical">
+
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Nom</nz-form-label>
         <nz-form-control>
           <input nz-input formControlName="nom" placeholder="Nom du mécanicien" />
         </nz-form-control>
       </nz-form-item>
-  
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true">adresseMail</nz-form-label>
+        <nz-form-control>
+          <input nz-input type="email" formControlName="adresseMail" placeholder="Email du mécanicien" />
+        </nz-form-control>
+      </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Date de naissance</nz-form-label>
         <nz-form-control>
           <nz-date-picker formControlName="dateNaissance" [nzDisabledDate]="disableFutureDate"></nz-date-picker>
         </nz-form-control>
       </nz-form-item>
-  
+
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Adresse</nz-form-label>
         <nz-form-control>
           <input nz-input formControlName="adresse" placeholder="Adresse" />
         </nz-form-control>
       </nz-form-item>
-  
+
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Numéro CIN</nz-form-label>
         <nz-form-control>
           <input nz-input formControlName="cin" placeholder="Numéro de CIN" />
         </nz-form-control>
       </nz-form-item>
-  
+
       <nz-form-item>
         <nz-form-label [nzRequired]="true">Contact</nz-form-label>
         <nz-form-control>
           <input nz-input formControlName="contact" placeholder="Numéro de téléphone" />
         </nz-form-control>
       </nz-form-item>
-  
-      <button nz-button nzType="primary" [disabled]="mecanicienForm.invalid">Enregistrer</button>
+
+      <button nz-button nzType="primary" [disabled]="mecanicienForm.invalid" (click)="submitForm()">Enregistrer</button>
     </form>
   </div>
 </div>

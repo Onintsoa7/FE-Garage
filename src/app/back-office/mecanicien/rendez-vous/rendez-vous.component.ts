@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component ,OnInit} from '@angular/core';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -13,7 +13,11 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { FormsModule } from '@angular/forms';
+import { ServiceService } from '../../../core/services/frontoffice/service.service';
+import { Service } from '../../../core/models/service';
 
 @Component({
   selector: 'app-rendez-vous',
@@ -27,67 +31,48 @@ import { FormsModule } from '@angular/forms';
     NzDividerModule,
     NzSelectModule,
     NzInputModule,
-    NzButtonModule
+    NzButtonModule,
+    NzSpinModule
   ],
   templateUrl: './rendez-vous.component.html',
-  styleUrl: './rendez-vous.component.scss'
+  styleUrls: ['./rendez-vous.component.scss'],
+  providers: [NzMessageService]
 })
-export class RendezVousComponent {
-  todo = [
-    {
-      date: '2023-05-01',
-      heure: '10:00',
-      marque: 'Toyota',
-      matricule: 'ABC123',
-      type_services: 'Diagnostic',
-      partie: 'Moteur',
-      pieces: ['Injecteur']
-    },
-    {
-      date: '2023-05-01',
-      heure: '14:00',
-      marque: 'Toyota',
-      matricule: 'ABC123',
-      type_services: 'Diagnostic',
-      partie: 'Moteur',
-      pieces: ['Filtre de carburant']
-    },
-    {
-      date: '2023-05-01',
-      heure: '14:00',
-      marque: 'Toyota',
-      matricule: 'ABC123',
-      type_services: 'Diagnostic',
-      partie: 'Vitesse',
-      pieces: ['Câble Embrayage']
-    }
-  ];
+export class RendezVousComponent implements OnInit{
 
-  inProgress: any[] = [];
-  done: any[] = [];
+  mecano: string | null = sessionStorage.getItem('connected_admin');
+  serviceList: Service[] = [];
+  todo: Service[] = [];
+  inProgress: Service[] = [];
+  done: Service[] = [];
+  isLoading: boolean = false;  
 
-  // Liste de toutes les pièces disponibles
-  pieces: { id: number; nom: string }[] = [];
+  constructor(private Service: ServiceService, private message: NzMessageService) {}
 
-  // Données de facturation par tache terminée
-  facturations: {
-    data: any;
-    dureeTravail: string;
-    selectedPieces: string[];
-  }[] = [];
-
-  constructor() {
-    this.initPieces();
+  ngOnInit(): void {
+    this.getListRendezVous();
   }
 
-  initPieces() {
-    const set = new Set<string>();
-    this.todo.forEach(item => item.pieces.forEach(p => set.add(p)));
-
-    const autresPieces = ['Bougie', 'Batterie', 'Radiateur', 'Filtre à air', 'Courroie'];
-    autresPieces.forEach(p => set.add(p));
-
-    this.pieces = Array.from(set).map((nom, index) => ({ id: index + 1, nom }));
+  getListRendezVous(): void {
+    this.isLoading = true;
+    if(this.mecano){
+      let parsedUser = JSON.parse(this.mecano);
+      this.Service.getServicesByEtatAndMecanicien('assigne', parsedUser._id).subscribe({
+        next: (data) => {
+          this.serviceList = Array.isArray(data) ? data : [data];
+          this.todo = this.serviceList.filter(service => service.etat === 'assigne');
+          this.inProgress = this.serviceList.filter(service => service.etat === 'En cours');
+          this.done = this.serviceList.filter(service => service.etat === 'Facturer');
+          this.isLoading = false;
+          this.message.success('Liste des rendez-vous chargée avec succès');
+        },
+        error: (err) => {
+          console.error('Erreur lors du chargement des services', err);
+          this.message.error('Erreur lors du chargement des services');
+          this.isLoading = false;
+        },
+      });
+    }
   }
 
   drop(event: CdkDragDrop<any[]>) {
@@ -100,20 +85,33 @@ export class RendezVousComponent {
         event.previousIndex,
         event.currentIndex
       );
-
-      if (event.container.id === 'doneList') {
-        const task = event.container.data[event.currentIndex];
-        this.facturations.push({
-          data: task,
-          dureeTravail: '',
-          selectedPieces: [...task.pieces]
-        });
+  
+      const movedTask = event.container.data[event.currentIndex];
+  
+      if (event.container.id === 'todoList') {
+        movedTask.etat = 'assigne';
+      } else if (event.container.id === 'inProgressList') {
+        movedTask.etat = 'En cours';
+      } else if (event.container.id === 'doneList') {
+        movedTask.etat = 'Facturer';
       }
-    }
-  }
 
-  facturer(facture: any) {
-    console.log('Facturation envoyée :', facture);
-    // Tu peux ici envoyer vers un backend ou stocker
+      this.isLoading = true;
+      this.message.info('Mise à jour de l\'état en cours...');
+
+      // Appeler le backend pour mettre à jour l'état
+      this.Service.updateService(movedTask._id, { etat: movedTask.etat }).subscribe({
+        next: (response) => {
+          console.log(`✅ État mis à jour avec succès pour l'élément ${movedTask._id} - ${response.etat}`);
+          this.isLoading = false;
+          this.message.success('État mis à jour avec succès !');
+        },
+        error: (err) => {
+          console.error('❌ Erreur lors de la mise à jour de l\'état', err)
+          this.isLoading = false;
+          this.message.error('Erreur lors de la mise à jour de l\'état');
+        }  
+      });
+    }
   }
 }

@@ -44,7 +44,7 @@ export class SigninService {
     this.getUserById(userData.id).subscribe({
       next: (user) => {
         this.connected = user;
-        sessionStorage.setItem('connected_user', JSON.stringify(user));
+        sessionStorage.setItem('connected_admin', JSON.stringify(user));
       },
       error: (err) => {
         console.error('Error fetching connected user:', err);
@@ -52,7 +52,7 @@ export class SigninService {
     });
   }
   getConnectedUser(): User {
-    const storedUser = JSON.parse(sessionStorage.getItem('connected_user')!) as User;
+    const storedUser = JSON.parse(sessionStorage.getItem('connected_admin')!) as User;
     return storedUser;
   }
   deconnexion(){

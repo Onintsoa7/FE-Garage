@@ -5,9 +5,9 @@
     margin: 0;
     padding: 0;
   }
-  
- 
-  
+
+
+
   /* Sidebar */
   app-sidebar-admin {
     width: 220px;
@@ -18,15 +18,16 @@
     left: 0;
     bottom: 0;
   }
-  
+
   /* Contenu */
   .content {
     flex: 1;
     margin-left: 220px;
     padding: 20px;
     overflow-y: auto;
+    padding-bottom: 5pc;
   }
-  
+
   /* Footer */
   app-footer {
     background-color: #001529;
@@ -34,24 +35,23 @@
     text-align: center;
     padding: 15px;
     font-size: 14px;
-    position: absolute;
     bottom: 0;
     width: calc(100% - 220px);
     left: 220px;
+    margin-left: 13pc;
   }
-  
+
   @media (max-width: 768px) {
     app-sidebar-mecanicien {
       width: 60px;
     }
-  
+
     .content {
       margin-left: 60px;
     }
-  
+
     app-footer {
       width: calc(100% - 60px);
       left: 60px;
     }
   }
-  

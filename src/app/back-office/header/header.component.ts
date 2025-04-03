@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { SigninService } from '../../core/services/signin.service';
 @Component({
   selector: 'app-header',
   imports: [
@@ -17,11 +18,19 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
-  constructor(private router: Router) {}
+export class HeaderComponent implements OnInit {
+  hasConnectedUSer = false;
+  constructor(private router: Router, private signin: SigninService) {}
 
-  logout(): void {
-    console.log("Déconnexion...");
-    this.router.navigate(['/login']);
+  ngOnInit(): void {
+    const storedUser = this.signin.getConnectedUser();
+    if (storedUser) {
+      this.hasConnectedUSer = true;
+    }
+  }
+  deconnexion(){
+    this.signin.deconnexion();
+    this.hasConnectedUSer = false;
+    this.router.navigate(['/backoffice']);
   }
 }

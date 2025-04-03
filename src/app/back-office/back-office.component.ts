@@ -25,21 +25,37 @@ import { UserLogin } from '../core/models/user';
     HttpClientModule
   ],
   templateUrl: './back-office.component.html',
-  styleUrl: './back-office.component.scss'
+  styleUrls: ['./back-office.component.scss']
 })
 export class BackOfficeComponent {
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   isLoading = false;
+  userType: 'admin' | 'mecano' = 'admin';
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private signinService: SigninService
   ) {
-    this.loginForm = this.fb.group({
-      adresseMail: ['mirado@mirado.com', [Validators.required, Validators.email]],
-      password: ['mirado', [Validators.required, Validators.minLength(6)]]
-    });
+    this.initForm();
+  }
+  initForm() {
+    if (this.userType === 'admin') {
+      this.loginForm = this.fb.group({
+        adresseMail: ['administrateur@example.com', [Validators.required, Validators.email]],
+        password: ['administrateur', [Validators.required, Validators.minLength(6)]]
+      });
+    } else if (this.userType === 'mecano') {
+      this.loginForm = this.fb.group({
+        adresseMail: ['jean@mecano.com', [Validators.required, Validators.email]],
+        password: ['jeanmecano', [Validators.required, Validators.minLength(6)]]
+      });
+    }
+  }
+
+  setUserType(type: 'admin' | 'mecano'): void {
+    this.userType = type;
+    this.initForm();
   }
 
   submitForm(): void {
@@ -59,12 +75,15 @@ export class BackOfficeComponent {
     this.isLoading = true;
     this.signinService.loginUser(userLogin).subscribe({
       next: (response) => {
-        console.log('Connexion réussie :', response);
-        localStorage.setItem('token', response.body.token);
-        localStorage.setItem('user', JSON.stringify(response.body.user));
         setTimeout(() => {
           this.isLoading = false;
-          this.router.navigate(['backoffice/mecanicien']); // Rediriger après la connexion
+          if (this.userType === 'admin') {
+            console.log("admin");
+            this.router.navigate(['backoffice/admin']); // Rediriger Admin
+          } else {
+            console.log("mecano");
+            this.router.navigate(['backoffice/mecanicien']); // Rediriger Mecano
+          }
         }, 2000);
       },
       error: (err) => {

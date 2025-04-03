@@ -2,10 +2,10 @@
   <nz-sider nzWidth="220px" nzTheme="dark">
     <ul nz-menu nzMode="inline" nzTheme="dark">
       <li *ngFor="let item of sideBarContents" nz-menu-item (click)="navigateTo(item.route)">
-        <i nz-icon [nzType]="item.icon"></i> {{ item.title }}
+        <i></i> {{ item.title }}
       </li>
       <li nz-menu-item (click)="logout()">
-        <i nz-icon nzType="logout"></i> Déconnexion
+        <i></i> Déconnexion
       </li>
     </ul>
   </nz-sider>

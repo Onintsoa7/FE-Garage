@@ -1,6 +1,6 @@
 export class Constants{
   // public static BASE_URL = 'http://localhost:5000/';
-  public static BASE_URL = 'https://m1p12mean-1767-1905.onrender.com/';
+  public static BASE_URL= 'https://m1p12mean-1767-1905.onrender.com/';
 
   public static USERS_API = this.BASE_URL + 'users';
   public static LOGIN_API = this.BASE_URL + 'users/login';

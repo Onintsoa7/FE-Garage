@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "FE-garage": {
+    "m1p12mean-mirado-onintsoa-BO": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/fe-garage",
+            "outputPath": "dist/m1p12mean-mirado-onintsoa-bo",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -29,19 +29,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
-                "output": "/assets/"
               }
             ],
             "styles": [
-              "src/theme.less",
-              "@angular/material/prebuilt-themes/azure-blue.css",
-              "src/styles.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
+              "./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+              "src/styles.scss"
             ],
             "scripts": [],
             "server": "src/main.server.ts",
@@ -55,8 +47,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "4mb"
+                  "maximumWarning": "2MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -78,10 +70,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "FE-garage:build:production"
+              "buildTarget": "m1p12mean-mirado-onintsoa-BO:build:production"
             },
             "development": {
-              "buildTarget": "FE-garage:build:development"
+              "buildTarget": "m1p12mean-mirado-onintsoa-BO:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -105,9 +97,8 @@
               }
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/azure-blue.css",
-              "src/styles.scss",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+              "src/styles.scss"
             ],
             "scripts": []
           }
@@ -116,6 +107,6 @@
     }
   },
   "cli": {
-    "analytics": "f55cb8b0-0fe7-48d8-9c17-13f061d5b193"
+    "analytics": false
   }
 }

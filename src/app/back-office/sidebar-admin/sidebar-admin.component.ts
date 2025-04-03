@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzIconModule } from 'ng-zorro-antd/icon';
+// import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 
@@ -11,7 +11,7 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
   imports: [
     CommonModule,
     NzButtonModule,
-    NzIconModule,
+    // NzIconModule,
     NzLayoutModule,
     NzMenuModule
   ],
@@ -22,7 +22,7 @@ export class SidebarAdminComponent {
   constructor(private router: Router) {}
   logout(): void {
     console.log("Déconnexion...");
-    this.router.navigate(['/login']); 
+    this.router.navigate(['/login']);
   }
   navigateTo(route: string): void {
     this.router.navigate([route]);

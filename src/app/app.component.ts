@@ -9,10 +9,10 @@ import { AuthService } from './core/services/auth.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'Kara-Car';
+  title = 'm1p12mean-mirado-onintsoa-BO';
   constructor(private authService: AuthService, private router: Router) {
     if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/landing-page']); // Redirection si pas connecté
+      this.router.navigate(['/backoffice']); // Redirection si pas connecté
     }
   }
 }

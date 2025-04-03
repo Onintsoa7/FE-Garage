@@ -1,58 +1,77 @@
 <div nz-row>
     <div nz-col nzSpan="6">
         <nz-card class="card">
-            <h3>Nombre de rendez-vous Aujourd'hui</h3>
+            <h3>Rendez-vous aujourd'hui</h3>
             <div nz-body>
-                <h1>6</h1>
+                <h1>{{servicesToday}}</h1>
             </div>
         </nz-card>
     </div>
     <div nz-col nzSpan="6">
         <nz-card class="card">
-            <h3>Nombre de Mécano dispo</h3>
+            <h3>Nombre de Mécaniciens</h3>
             <div nz-body>
-                <h1>1</h1>
+                <h1>{{mecanicienCount}}</h1>
             </div>
         </nz-card>
     </div>
     <div nz-col nzSpan="6">
         <nz-card class="card">
-            <h3>Rendez vous traité</h3>
+            <h3>Rendez-vous traité</h3>
             <div nz-body>
-                <h1>2</h1>
+                <h1>{{servicesDone}}</h1>
             </div>
         </nz-card>
     </div>
     <div nz-col nzSpan="6">
         <nz-card class="card">
-            <h3>Reste</h3>
+            <h3>Demande de devis</h3>
             <div nz-body>
-                <h1>4</h1>
+                <h1>{{servicesPending}}</h1>
             </div>
         </nz-card>
     </div>
 </div>
+<div nz-row style="justify-content: center;">
+  <div nz-col nzSpan="8">
+      <nz-card class="card" style="background: transparent; color: inherit; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+          <h2>Chiffre d'affaire</h2>
+          <div nz-body>
+              <h1 style="font-size: 2.8em;">{{CA}} MGA</h1>
+          </div>
+      </nz-card>
+  </div>
+  <div nz-col nzSpan="8">
+      <nz-card class="card" style="background: transparent; color: inherit; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+          <h2>Bénéfice</h2>
+          <div nz-body>
+              <h1 style="font-size: 2.8em;">{{mecanicienCount}} MGA</h1>
+          </div>
+      </nz-card>
+  </div>
+</div>
+<div nz-row >
+  <div nz-col nzSpan="24">
+    <div class="chart-container">
+      <h2>Chiffre d'affaires annuel</h2>
+      <nz-date-picker
+      nzMode="year"
+      nzFormat="yyyy"
+      [(ngModel)]="moisFiltre"
+      (ngModelChange)="mettreAJourGraphique()"
+      [nzPlaceHolder]="'Filtrer par année'"
+      [nzDisabledDate]="disableFutureMonth"
+    ></nz-date-picker>
 
-<div nz-row>
-    <div nz-col nzSpan="24">
-      <div class="chart-container">
-        <h2>Chiffre d'affaires mensuel</h2>
-  
-        <!-- Sélecteur de mois -->
-        <label for="monthSelect">Sélectionnez un mois :</label>
-        <select id="monthSelect" [(ngModel)]="selectedMonth">
-          @for (month of months; track month) {
-            <option [value]="month.value">{{ month.name }}</option>
-          }
-        </select>
-  
-        <!-- Graphique ECharts -->
-        <echarts 
-          [options]="chartOptions" 
-          class="demo-chart" 
-          style="width: 100%; height: 400px;"
-          [autoResize]="true">
-        </echarts>
-      </div>
+
+      <!-- Graphique ECharts -->
+      <echarts
+        [options]="chartOptions"
+        class="demo-chart"
+        style="width: 100%; height: 400px;"
+        [autoResize]="true">
+      </echarts>
     </div>
   </div>
+</div>
+

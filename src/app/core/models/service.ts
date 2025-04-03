@@ -1,14 +1,15 @@
 import { Piece } from "./piece";
 import { TypeService } from "./type-service";
+import { User } from "./user";
 import { Voiture } from "./voiture";
 
 export interface Service {
   etat: string;
   _id?: string;
-  user: string; // ID utilisateur
-  typeService: string | TypeService;
-  voiture: string | Voiture;
-  piece?: string[] | Piece[];
+  user: any; 
+  typeService: any;
+  voiture: Voiture;
+  piece?: any;
   avecPiece?: boolean[];
   prixPiece?: number[];
   description?: string;
@@ -26,4 +27,6 @@ export interface Service {
   duree?: number;
   createdAt?: Date;
   updatedAt?: Date;
+  mecanicien?: string | User;
+  dureeEstimee?:string;
 }
