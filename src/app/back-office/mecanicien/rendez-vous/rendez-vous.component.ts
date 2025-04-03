@@ -49,9 +49,9 @@ export class RendezVousComponent implements OnInit{
   inProgress: Service[] = [];
   done: Service[] = [];
   pieces:Piece[] = [];
-  isLoading: boolean = false;
-  hasTaskInProgress: boolean = false;
-  facturations: Service[] = [];
+  isLoading: boolean = false;  
+  hasTaskInProgress: boolean = false;  
+  facturations: Service[] = []; 
   datenow: Date = new Date();
   nouvellePiece: string = '';
   nouveauPrix: number = 0;
@@ -80,7 +80,7 @@ export class RendezVousComponent implements OnInit{
 
   getInProgressList(): void {
     let parsedUser = JSON.parse(this.mecano);
-    this.Service.getServicesByEtatAndMecanicien('en cours', parsedUser._id).subscribe({
+    this.Service.getServicesByEtatAndMecanicien('En cours', parsedUser._id).subscribe({
       next: (data) => {
         this.inProgress = Array.isArray(data) ? data : [];
         this.hasTaskInProgress = this.inProgress.length > 0;
@@ -134,19 +134,19 @@ export class RendezVousComponent implements OnInit{
     });
   }
 
-
+    
   onPieceChange(facture: any): void {
     if (!facture.prixPiece || !Array.isArray(facture.prixPiece)) {
       facture.prixPiece = [];
     }
-
+  
     facture.piece.forEach((piece: string, index: number) => {
       if (facture.prixPiece[index] === undefined) {
         facture.prixPiece[index] = 0;  // Initialise chaque prix de pièce à 0 par défaut
       }
     });
   }
-
+  
   drop(event: CdkDragDrop<any[]>) {
     const movedTask = event.previousContainer.data[event.previousIndex];
 
@@ -173,7 +173,7 @@ export class RendezVousComponent implements OnInit{
       if (event.container.id === 'todoList') {
         movedTask.etat = 'assigne';
       } else if (event.container.id === 'inProgressList') {
-        movedTask.etat = 'en cours';
+        movedTask.etat = 'En cours';
         this.hasTaskInProgress = true;
       } else if (event.container.id === 'doneList') {
         movedTask.etat = 'facturer';
@@ -248,7 +248,7 @@ ajouterPiece(facture: any): void {
   if (!facture.prixPiece || !Array.isArray(facture.prixPiece)) {
     facture.prixPiece = [];
   }
-  facture.prixPiece.push(this.nouveauPrix);
+  facture.prixPiece.push(this.nouveauPrix);  
   console.log('Pièces actuelles :', facture.piece);
   console.log('Prix actuels :', facture.prixPiece);
   this.nouvellePiece = '';
