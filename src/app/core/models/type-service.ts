@@ -3,4 +3,5 @@ export interface TypeService {
   nom: string;
   partie?: string;
   typeEntretien?: string;
+  prixHoraire: Number;
 }

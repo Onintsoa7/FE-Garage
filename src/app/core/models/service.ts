@@ -6,7 +6,7 @@ import { Voiture } from "./voiture";
 export interface Service {
   etat: string;
   _id?: string;
-  user: any; 
+  user: any;
   typeService: any;
   voiture: Voiture;
   piece?: any;
@@ -27,7 +27,7 @@ export interface Service {
   duree?: number;
   createdAt?: Date;
   updatedAt?: Date;
-  mecanicien?: string | User;
+  mecanicien?: any | User;
   dureeEstimee?:string;
   dureeEstimeeEnNombre?:number;
 }

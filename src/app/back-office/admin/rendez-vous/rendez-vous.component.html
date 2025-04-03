@@ -1,86 +1,134 @@
 <div class="container">
-    <div class="card-container">
+  <div class="card-container">
+      <div class="titre">
+          <h3>Rendez-vous</h3>
+          <hr>
+      </div>
+      <nz-calendar [(nzValue)]="selectedDateObject" (nzSelectChange)="onSelectChange($event)">
+        <ul *nzDateCell="let date" class="events">
+          <ng-container *ngFor="let rdv of getRendezVousDuJour(date); let i = index">
+            <li (click)="openForm(i, rdv)">
+              <nz-badge [nzColor]="getBadgeColor(rdv)"
+                        [nzText]="getDisplayText(rdv)">
+              </nz-badge>
+            </li>
+          </ng-container>
+        </ul>
+      </nz-calendar>
+      <div class="etat-liste mt-4">
         <div class="titre">
-            <h3>Rendez-vous</h3>
+            <h3>Liste des états avec leurs codes couleur</h3>
             <hr>
         </div>
-        <nz-calendar [(nzValue)]="selectedDateObject" (nzSelectChange)="onSelectChange($event)">
-          <ul *nzDateCell="let date" class="events">
-            <ng-container *ngFor="let rdv of getRendezVousDuJour(date); let i = index">
-              <li (click)="openForm(i, rdv)">
-                <nz-badge [nzColor]="getBadgeColor(rdv)"
-                          [nzText]="getDisplayText(rdv)">
-                </nz-badge>
-              </li>
-            </ng-container>
-          </ul>
-        </nz-calendar>
-    </div>
+        <div class="etat-container">
+          <div *ngFor="let etat of etatList" class="etat-item">
+            <span class="etat-couleur" [style.backgroundColor]="etat.color"></span>
+            <span class="etat-label">{{ etat.label }}</span>
+          </div>
+        </div>
+      </div>
+  </div>
 
-    <div class="card-right">
-        <div class="titre">
-            <h3>Liste Rendez-vous</h3>
-            <hr>
+  <div class="card-right">
+      <div class="titre">
+          <h3>Liste Rendez-vous</h3>
+          <hr>
+      </div>
+
+      <div class="container-rendez-vous">
+          <div *ngFor="let rdv of filteredRendezVous; let i = index" class="rendez-vous" (click)="openForm(i, rdv)">
+            <div class="data">
+              <h5>Date de visite suggérée : {{ rdv.dateSuggestionVisite | date: 'dd/MM/yyyy' }} à {{ rdv.heureSuggestionVisite }}</h5>
+              <h5>Date de visite fixée : {{ rdv.dateFixeVisite | date: 'dd/MM/yyyy' }} à {{ rdv.heureFixeVisite || 'Non défini' }}</h5>
+              <h5>Voiture : {{ rdv.voiture.immatriculation || 'Immatriculation non renseignée' }}</h5>
+              <h5>Type de service : {{ rdv.typeService?.nom || 'Non défini' }}</h5>
+              <h5>Description : {{ rdv.description || 'Non spécifiée' }}</h5>
+              <h5>Symptômes visibles : {{ rdv.visibleSymptom ? 'Oui' : 'Non' }}</h5>
+              <h5>Type d'entretien : {{ rdv.typeEntretien || 'Non spécifié' }}</h5>
+              <h5>Date de dernière entretien : {{ rdv.dateDerniereEntretien | date: 'dd/MM/yyyy' }}</h5>
+              <h5>Durée estimée : {{ rdv.dureeEstimee || 'Non spécifiée' }}</h5>
+              <h5>Montant Final : {{ rdv.montantFinal || 'Non spécifié' }}</h5>
+              <h5>Durée : {{ rdv.duree || 'Non spécifiée' }}</h5>
+              <h5>État : {{ getBadgeDetails(rdv).label || 'Non spécifié' }}</h5>
+
+              <table class="table-piece">
+                <thead class="thead-piece">
+                  <tr>
+                    <th class="border px-4 py-2">Nom de la Pièce</th>
+                    <th class="border px-4 py-2">Prix</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let piece of rdv.piece; let index = index">
+                    <td class="border px-4 py-2">{{ piece.fille || 'Non spécifiée' }}</td>
+                    <td class="border px-4 py-2">
+                      <ng-container *ngIf="((rdv.prixPiece?.[index] !== undefined && rdv.prixPiece?.[index] !== 0) || rdv.avecPiece?.[index] === true); else inputPrice">
+                        {{ rdv.prixPiece?.[index] }} Ar
+                      </ng-container>
+                      <ng-template #inputPrice>
+                        <input type="number" class="border border-gray-300 rounded p-1 w-full"
+                               placeholder="Entrer le prix"
+                               (change)="updatePrice($event, index)" />
+                      </ng-template>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+              <div class="status">
+                  <h5 [ngClass]="{}">
+                      <nz-badge [nzColor]="getBadgeDetails(rdv).color" [nzText]="getBadgeDetails(rdv).label"></nz-badge>
+                  </h5>
+              </div>
+          </div>
+
+          <div class="forms-rendez-vous" *ngIf="selectedRDVIndex !== null">
+            <div class="rdv-details mb-4">
+                <h3>Détails de la demande d' intervention</h3>
+                <p>Voiture : {{ filteredRendezVous[selectedRDVIndex]?.voiture?.immatriculation || 'Non spécifiée' }}</p>
+                <p>Type de Service : {{ filteredRendezVous[selectedRDVIndex]?.typeService?.nom || 'Non spécifié' }}</p>
+                <p>Description : {{ filteredRendezVous[selectedRDVIndex]?.description || 'Non spécifiée' }}</p>
+                <hr>
+            </div>
+
+            <form [formGroup]="formRendezVous" (ngSubmit)="submitForm()" nz-form nzLayout="vertical">
+                <nz-form-item>
+                    <nz-form-label>Mécanicien</nz-form-label>
+                    <nz-form-control>
+                        <nz-select formControlName="mecanicien" nzPlaceHolder="Choisir un mécanicien">
+                            <nz-option *ngFor="let m of mecanicienList" [nzValue]="m" [nzLabel]="m.nom"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <div class="row">
+                  <nz-form-item>
+                      <nz-form-label>Date</nz-form-label>
+                      <nz-form-control>
+                          <nz-date-picker formControlName="date" nzFormat="yyyy-MM-dd"></nz-date-picker>
+                      </nz-form-control>
+                  </nz-form-item>
+
+                  <nz-form-item>
+                      <nz-form-label>Heure</nz-form-label>
+                      <nz-form-control>
+                          <nz-time-picker formControlName="heure" nzFormat="HH:mm"></nz-time-picker>
+                      </nz-form-control>
+                  </nz-form-item>
+
+                  <nz-form-item>
+                      <nz-form-label>Estimation Réparation</nz-form-label>
+                      <nz-form-control>
+                          <nz-time-picker formControlName="estimationReparation" nzFormat="HH:mm"></nz-time-picker>
+                      </nz-form-control>
+                  </nz-form-item>
+              </div>
+            <button nz-button nzType="primary" [disabled]="formRendezVous.invalid">Valider</button>
+            </form>
         </div>
 
-        <div class="container-rendez-vous">
-            <!-- @for (rdv of getRendezVousSelected(); let i = $index; track i) {
-            <div class="rendez-vous" (click)="openForm(i, rdv)">
-                <div class="data">
-                    <h5>{{ rdv.dateSuggestionVisite }} à {{ rdv.heure }}</h5>
-                    <h5>{{ rdv.nom }} {{ rdv.voiture }}</h5>
-                    <h5>Type de service: {{ rdv.type_service }}</h5>
-                    <h5>Partie: {{ rdv.partie }}</h5>
-                    <h5>Pièce: {{ rdv.piece }}</h5>
-                </div>
-                <div class="status">
-                    <h5 [ngClass]="{
-                      'non-lue': rdv.status === 'Non Lue',
-                      'annulé': rdv.status === 'Annulé'
-                    }">
-                        {{ rdv.status }}
-                    </h5>
-                </div>
-            </div>
-            <div class="forms-rendez-vous" *ngIf="selectedRDVIndex === i">
-                <form [formGroup]="formRendezVous" (ngSubmit)="submitForm()" nz-form nzLayout="vertical">
-
-                    <nz-form-item>
-                        <nz-form-label>Mécanicien</nz-form-label>
-                        <nz-form-control>
-                            <nz-select formControlName="mecanicien" nzPlaceHolder="Choisir un mécanicien">
-                                <nz-option *ngFor="let m of mecaniciens" [nzValue]="m" [nzLabel]="m"></nz-option>
-                            </nz-select>
-                        </nz-form-control>
-                    </nz-form-item>
-                    <div class="row">
-                        <nz-form-item>
-                            <nz-form-label>Date</nz-form-label>
-                            <nz-form-control>
-                                <nz-date-picker formControlName="date" nzFormat="yyyy-MM-dd"></nz-date-picker>
-                            </nz-form-control>
-                        </nz-form-item>
-
-                        <nz-form-item>
-                            <nz-form-label>Heure</nz-form-label>
-                            <nz-form-control>
-                                <nz-time-picker formControlName="heure" nzFormat="HH:mm"></nz-time-picker>
-                            </nz-form-control>
-                        </nz-form-item>
-
-                        <nz-form-item>
-                            <nz-form-label>Estimation Réparation</nz-form-label>
-                            <nz-form-control>
-                                <nz-time-picker formControlName="estimationReparation" nzFormat="HH:mm"></nz-time-picker>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-                    <button nz-button nzType="primary" [disabled]="formRendezVous.invalid">Valider</button>
-
-                </form>
-            </div>
-            }
-        </div>
-      -->
-    </div>
+      </div>
+  </div>
 </div>
