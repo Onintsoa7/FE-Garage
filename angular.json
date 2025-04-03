@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "m1p12mean-mirado-onintsoa-BO": {
+    "FE-garage": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/m1p12mean-mirado-onintsoa-bo",
+            "outputPath": "dist/fe-garage",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -29,6 +29,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
               }
             ],
             "styles": [
@@ -47,8 +52,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2MB",
-                  "maximumError": "2MB"
+                  "maximumWarning": "4mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -70,10 +75,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "m1p12mean-mirado-onintsoa-BO:build:production"
+              "buildTarget": "FE-garage:build:production"
             },
             "development": {
-              "buildTarget": "m1p12mean-mirado-onintsoa-BO:build:development"
+              "buildTarget": "FE-garage:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -107,6 +112,6 @@
     }
   },
   "cli": {
-    "analytics": false
+    "analytics": "f55cb8b0-0fe7-48d8-9c17-13f061d5b193"
   }
 }
